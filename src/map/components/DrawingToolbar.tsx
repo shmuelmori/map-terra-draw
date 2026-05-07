@@ -1,14 +1,19 @@
 import { useMapContext } from '../core/useMapContext';
 import type { DrawMode } from '../drawing/DrawController';
 
-const MODES: { mode: DrawMode; label: string }[] = [
-  { mode: 'select', label: 'Select / Edit' },
-  { mode: 'linestring', label: 'Line' },
-  { mode: 'polygon', label: 'Polygon' },
-  { mode: 'point', label: 'Point' },
-];
+const LABELS: Record<DrawMode, string> = {
+  select: 'Select / Edit',
+  linestring: 'Line',
+  polygon: 'Polygon',
+  point: 'Point',
+  static: 'Static',
+};
 
-export function DrawingToolbar() {
+interface Props {
+  modes?: DrawMode[];
+}
+
+export function DrawingToolbar({ modes = ['select', 'linestring'] }: Props) {
   const { drawControllerRef, isReady } = useMapContext();
 
   if (!isReady) return null;
@@ -28,9 +33,9 @@ export function DrawingToolbar() {
         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
       }}
     >
-      {MODES.map(({ mode, label }) => (
+      {modes.map((mode) => (
         <button key={mode} onClick={() => drawControllerRef.current?.setMode(mode)}>
-          {label}
+          {LABELS[mode]}
         </button>
       ))}
       <button onClick={() => drawControllerRef.current?.clear()}>Clear</button>
