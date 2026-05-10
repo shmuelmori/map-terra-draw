@@ -71,6 +71,7 @@ export class DrawController {
       }),
       modes,
     });
+    
 
     this.draw.on('change', () => {
       const snapshot = this.draw.getSnapshot();
@@ -85,6 +86,7 @@ export class DrawController {
   }
 
   setMode(mode: DrawMode): void {
+    console.log('Setting draw mode to', mode);
     this.draw.setMode(mode);
   }
 

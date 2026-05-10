@@ -3,25 +3,20 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useMapContext } from '../core/useMapContext';
 import { DrawController, type DrawControllerTools } from '../drawing/DrawController';
-import { useAppDispatch } from '../../app/store';
-import { createDrawSyncer } from '../sync/createDrawSyncer';
 
 interface Props {
-  enableDrawing?: boolean;
   drawTools?: DrawControllerTools;
   initialCenter?: [number, number];
   initialZoom?: number;
 }
 
 export function MapCanvas({
-  enableDrawing = false,
   drawTools,
   initialCenter = [34.78, 32.08],
   initialZoom = 10,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { mapRef, drawControllerRef, setReady } = useMapContext();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -36,15 +31,11 @@ export function MapCanvas({
     mapRef.current = map;
 
     map.on('load', () => {
-      if (enableDrawing) {
-        const syncer = createDrawSyncer(dispatch);
         const controller = new DrawController({
           map,
           tools: drawTools,
-          onChange: (features) => syncer(features),
         });
         drawControllerRef.current = controller;
-      }
       setReady(true);
     });
 
